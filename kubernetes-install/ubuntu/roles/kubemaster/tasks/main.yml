@@ -1,0 +1,53 @@
+---
+# tasks file for kubemaster
+- name: Reset Kubernetes component
+  shell: "kubeadm reset --force"
+  ignore_errors: True
+- name: initialize Kubernetes
+#  ignore_errors: true
+  shell: |
+    kubeadm init --pod-network-cidr={{podcidr}} --apiserver-advertise-address {{ ansible_host }}
+  register: output
+- name: Storing Logs and Generated token for future purpose
+  copy:
+    content: "{{ output.stdout }}"
+    dest: "{{token_file}}"
+- name: download token
+  fetch:
+    src: "{{token_file}}"
+    dest: "{{token_file}}/"
+    flat: yes
+- name: create .kube directory
+  file:
+    path: "/home/{{ansible_user}}/.kube"
+    state: directory
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: '0700'
+- name: copy config to new directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    remote_src: yes
+    dest: "/home/{{ansible_user}}/.kube/config"
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: '0600'
+- name: set KUBECONFIG
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    insertbefore: 'PATH*'
+    regexp: '^KUBECONFIG'
+    line: "KUBECONFIG=/home/{{ansible_user}}/.kube/config"
+- name: reload environment vars
+  shell: . /etc/environment
+- name: restart kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+- name: initialize pod network
+#  ignore_errors: true
+  become: true
+  shell: |
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

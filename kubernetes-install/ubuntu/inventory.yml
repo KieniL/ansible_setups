@@ -1,0 +1,22 @@
+kubernetes-master-nodes:
+  hosts:
+    kubernetes-master.kienast:
+      ansible_host: 192.168.56.142
+  vars:
+    ansible_user: lukas
+    ansible_password: Kienast
+    ansible_become_user: root
+    ansible_become_pass: Kienast
+    podcidr: 10.244.0.0/16
+    token_file: join_token
+
+kubernetes-worker-nodes:
+  hosts:
+    kubernetes-worker2.kienast:
+      ansible_host: 192.168.56.139
+  vars:
+    ansible_user: lukas
+    ansible_password: Kienast
+    ansible_become_user: root
+    ansible_become_pass: Kienast
+    token_file: join_token

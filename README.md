@@ -7,7 +7,7 @@ Following roles are there
 * [secretsmanager](./secretsmanager/README.md)
 * [suid-sgid-checker](./suid-sgid-checker/README.md)
 * [ansible-pull](./ansible-pull/README.md)
-
+* [kubernetes-install](./kubernetes-install/README.md)
 
 ToDo:
 
@@ -15,3 +15,4 @@ ToDo:
 - [ ] Add molecule testing to secretsmanager
 - [x] Add molecule testing to suid-sgid-checker --> Docker based
 - [ ] Add molecule testing to ansible-pull
+- [ ] Add molecule testing to kubernetes-install

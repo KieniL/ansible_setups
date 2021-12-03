@@ -1,0 +1,20 @@
+---
+# tasks file for kubeworker
+- name: Reset Kubernetes component
+  shell: "kubeadm reset --force"
+  ignore_errors: True
+- name: Copying token to worker nodes
+  copy:
+    src: "{{ token_file }}/{{ token_file }}"
+    dest: "{{ token_file }}"
+- name: Cut out join command from file
+  shell: "`tail -2 {{ token_file }} > join`"
+- name: Change file ownership, group and permissions
+  file:
+    path: join
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: '0700'
+- name: join node to cluster
+  become: true
+  shell: "./join"

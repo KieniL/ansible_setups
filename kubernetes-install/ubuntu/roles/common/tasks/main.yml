@@ -1,0 +1,59 @@
+---
+# tasks file for common
+- name: set hostname
+  hostname:
+    name: "{{inventory_hostname}}"
+- name: modify /etc/hosts file with master entry
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{hostvars[item]['ansible_host']}} {{item}}"
+  with_items: "{{ groups['kubernetes-master-nodes'] }}"
+- name: modify /etc/hosts file with worker entry
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{hostvars[item]['ansible_host']}} {{item}}"
+  with_items: "{{ groups['kubernetes-worker-nodes'] }}"
+- name: update cache
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+- name: install required packages
+  apt:
+     pkg:
+     - curl
+- name: Add Docker GPG apt Key
+  apt_key:
+   url: https://download.docker.com/linux/ubuntu/gpg
+   state: present
+- name: Add Docker Repository
+  apt_repository:
+   repo: deb https://download.docker.com/linux/ubuntu bionic stable
+   state: present
+- name: Update apt and install docker
+  apt: update_cache=yes name=docker-ce state=latest
+- name: detect docker's cgroup-driver
+  shell: docker info 2>/dev/null |grep -i cgroup | cut -d":" -f2 | tr -d " "
+  register: docker_cgroup_driver
+- replace:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: '--cgroup-driver=(systemd|cgroupfs)'
+    replace: '--cgroup-driver={{docker_cgroup_driver.stdout}}'
+    backup: no
+- name: start docker
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+- name: Add the Kubernetes signing key
+  apt_key:
+     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+     state: present
+- name: Add Xenial Kubernetes Repository
+  apt_repository:
+   repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+   state: present
+- name: install kubeadm and kubectl
+  apt:
+    pkg:
+    - kubeadm
+    - kubectl
+- name: Disabling Swap on all nodes
+  shell: swapoff -a

@@ -22,7 +22,7 @@ jobs:
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: lint
-          molecule_working_dir: ./suid-sgid-checker
+          molecule_working_dir: suid-sgid-checker
 
   test:
     needs:
@@ -47,7 +47,7 @@ jobs:
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test
-          molecule_working_dir: ./suid-sgid-checker
+          molecule_working_dir: suid-sgid-checker
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include suid-sgid-checker"
+      include_role:
+        name: "suid-sgid-checker"

@@ -1,0 +1,50 @@
+name: test ansible-role
+
+on:
+  push:
+    paths:
+      - 'suid-sgid-checker/**'
+  pull_request:
+    paths:
+      - 'suid-sgid-checke/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule_command: lint
+
+  test:
+    needs:
+      - lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distros:
+          - docker.io/pycontribs/centos:8
+          - docker.io/pycontribs/alpine
+          - docker.io/pycontribs/debian
+          - docker.io/pycontribs/fedora
+          - docker.io/pycontribs/opensuse
+          - docker.io/pycontribs/ubuntu
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: Molecule
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule_command: test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distros }}

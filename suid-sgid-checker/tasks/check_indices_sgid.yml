@@ -1,0 +1,9 @@
+# tasks file to parse sgid file
+- name: Find the index of the item {{ item }} in sgid list
+  set_fact:
+    indices: "{{ lookup('ansible.utils.index_of', sgid_files_check, 'eq', item) }}"
+
+- name: Check if indices is not there
+  fail:
+    msg: "The item {{ item }} is not found in allowlist!"
+  when: indices == []

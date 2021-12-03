@@ -1,0 +1,53 @@
+---
+# defaults file for suid-sgid-checker
+suid_files_check:
+  - /usr/bin/chsh
+  - /usr/bin/passwd
+  - /usr/bin/newgrp
+  - /usr/bin/gpasswd
+  - /usr/bin/umount
+  - /usr/bin/mount
+  - /usr/bin/su
+  - /bin/su
+  - /usr/bin/chage
+  - /usr/bin/sudo
+  - /usr/libexec/dbus-1/dbus-daemon-launch-helper
+  - /usr/sbin/pam_timestamp_check
+  - /usr/sbin/unix_chkpwd
+  - /usr/sbin/grub2-set-bootflag
+  - /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+  - /usr/bin/chfn
+  - /bin/ping
+  - /bin/umount
+  - /bin/mount
+  - /usr/lib/openssh/ssh-keysign
+  - /usr/bin/newuidmap
+  - /usr/bin/newgidmap
+  - /usr/bin/expiry
+  - /usr/bin/crontab
+  - /sbin/unix2_chkpwd
+  - /sbin/unix_chkpwd
+
+
+sgid_files_check:
+  - /usr/bin/write
+  - /usr/libexec/utempter/utempter
+  - /usr/libexec/openssh/ssh-keysign
+  - /usr/bin/expiry
+  - /usr/bin/chage
+  - /usr/bin/wall
+  - /usr/local/lib/python3.7
+  - /usr/local/lib/python3.7/dist-packages
+  - /sbin/unix_chkpwd
+  - /var/local
+  - /var/mail
+  - /usr/lib/mktex/public
+  - /usr/libexec/utempter/utempter
+  - /usr/bin/ssh-agent
+  - /usr/local/lib/python2.7
+  - /usr/local/lib/python2.7/site-packages
+  - /usr/local/lib/python2.7/dist-packages
+  - /usr/local/lib/python3.6
+  - /usr/local/lib/python3.6/dist-packages
+  - /sbin/pam_extrausers_chkpwd
+  - /sbin/unix_chkpwd

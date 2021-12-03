@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'suid-sgid-checker/**'
+      - '.github/workflows/suid-sgid-buildtest.yml'
   pull_request:
     paths:
-      - 'suid-sgid-checke/**'
+      - 'suid-sgid-checker/**'
+      - '.github/workflows/suid-sgid-buildtest.yml'
 
 jobs:
   lint:

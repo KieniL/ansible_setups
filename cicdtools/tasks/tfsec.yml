@@ -1,0 +1,22 @@
+
+# tasks for tfsec
+- name: Get latest release of tfsec
+  uri:
+    url: https://api.github.com/repos/tfsec/tfsec/releases/latest
+    return_content: yes
+  register: github_release_tfsec
+
+- name: get releaseversion of tfsec
+  set_fact:
+    tfsecversion: "{{github_release_tfsec.json.tag_name}}"
+
+- name: download tfsec from github
+  get_url:
+    url: https://github.com/tfsec/tfsec/releases/download/{{tfsecversion}}/tfsec-linux-amd64
+    dest: /usr/local/bin/tfsec
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/tfsec
+    owner: "{{user}}"
+    mode: '0700'

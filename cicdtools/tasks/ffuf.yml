@@ -1,0 +1,31 @@
+
+- name: Get latest release of ffuf
+  uri:
+    url: https://api.github.com/repos/ffuf/ffuf/releases/latest
+    return_content: yes
+  register: github_release_ffuf
+
+- name: get releaseversion
+  set_fact:
+    ffufversion: "{{github_release_ffuf.json.tag_name}}"
+    ffuf_without_v: "{{github_release_ffuf.json.tag_name.split('v')}}"
+
+- name: download ffuf from github
+  get_url:
+    url: https://github.com/ffuf/ffuf/releases/download/{{ffufversion}}/ffuf_{{ffuf_without_v.1}}_linux_amd64.tar.gz
+    dest: /usr/local/src/ffuf.tar.gz
+  register: ffuf
+
+- name: Extract ffuf.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/ffuf.tar.gz
+    dest: /usr/local/bin
+  when: ffuf.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/ffuf
+    owner: "{{user}}"
+    mode: '0700'
+  when: ffuf.changed
+

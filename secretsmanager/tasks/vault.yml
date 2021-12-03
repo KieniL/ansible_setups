@@ -1,0 +1,126 @@
+#tasks for vault
+- name: Add IP pointing to the vaulturl
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ vaulturl }}$'
+    line: "{{ ansible_default_ipv4.address }} {{vaulturl}}"
+    state: present
+
+- name: Import and add Hashicorp key
+  apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: Add specified hashicorp repository into sources list
+  apt_repository:
+    repo: "deb https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    state: present
+  register: add_repository_vault
+
+- name: update package cache (debian, etc)
+  apt:
+    update_cache: yes
+  when: add_repository_vault.changed
+  
+- name: install vault
+  apt:
+    name: vault
+    state: present
+  register: vault
+
+- name: Create the /etc/vault irectory if it does not exist
+  file:
+    path: /etc/vault
+    state: directory
+    mode: '0755'
+    
+- name: copy the config.hcl file
+  template:
+    src: config.j2
+    dest: /etc/vault/config.hcl
+  register: vaultconfig
+
+- name: copy the vault.service file
+  copy:
+    src: "{{ role_path }}/files/vault.service"
+    dest: /etc/systemd/system/vault.service
+  register: vaultservice
+  
+- name: just force systemd to reread configs (2.4 and above)
+  systemd:
+    daemon_reload: yes
+  when: vault.changed or vaultservice.changed or vaultconfig.changed
+
+- name: Test for line of VAULT_ADDR in .bashrc
+  shell: grep -c "^VAULT_ADDR" /home/{{user}}/.bashrc || true
+  register: test_grep_vault
+
+
+- name: Adding the path in the bashrc files with the https address
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'export VAULT_ADDR="https://{{vaulturl}}:8200"'
+    state: present
+  when:
+  - test_grep_vault.stdout == "0"
+  - not test_grep_hosts
+  register: setvariable_vault
+
+
+- name: Updating the path in the bashrc files with the https address
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'export VAULT_ADDR="https://{{vaulturl}}:8200"'
+    backrefs: yes
+    regexp: '^export VAULT_ADDR'
+    state: present
+  when:
+  - test_grep_vault.stdout != "0"
+  - not test_grep_hosts
+  register: setvariable_vault
+
+- name: Adding the path in the bashrc files with the http address
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'export VAULT_ADDR="http://{{vaulturl}}:8200"'
+    state: present
+  when:
+  - test_grep_vault.stdout == "0"
+  - test_grep_hosts
+  register: setvariable_vault
+
+
+- name: Updating the path in the bashrc files with the http address
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'export VAULT_ADDR="http://{{vaulturl}}:8200"'
+    backrefs: yes
+    regexp: '^export VAULT_ADDR'
+    state: present
+  when:
+  - test_grep_vault.stdout != "0"
+  - test_grep_hosts
+  register: setvariable_vault
+
+- name: enable vault autocomplete
+  become_user: "{{user}}"
+  shell: vault -autocomplete-install
+  ignore_errors: True
+  register: install_vault_autocomplete
+
+- name: Source the bashrc file
+  shell: "source /home/{{user}}/.bashrc"
+  args:
+    executable: /bin/bash
+  when: install_vault_autocomplete.changed or setvariable_vault.changed
+
+- name: Make sure vault is running
+  systemd:
+    name: vault
+    state: started
+    
+- name: Enable vault
+  systemd:
+    name: vault
+    state: restarted
+    enabled: yes

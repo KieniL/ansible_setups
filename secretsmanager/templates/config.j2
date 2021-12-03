@@ -1,0 +1,15 @@
+storage "consul" {
+  address = "0.0.0.0:8500"
+  path = "vault/"
+}
+listener "tcp" {
+  address = "0.0.0.0:8200"
+  {% if vaulturl_check != "NXDOMAIN" and not test_grep_hosts%}
+  tls_disable = 0
+  tls_cert_file = "/etc/letsencrypt/live/{{vaulturl}}/fullchain.pem"
+  tls_key_file = "/etc/letsencrypt/live/{{vaulturl}}/privkey.pem"
+  {% else %}
+  tls_disable = 1
+  {% endif %}
+}
+ui = true

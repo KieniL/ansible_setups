@@ -1,0 +1,20 @@
+
+# tasks for kubeval
+- name: download kubeval from github
+  get_url:
+    url: "https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz"
+    dest: /usr/local/src/kubeval.tar.gz
+  register: kubeval
+
+- name: Extract kubeval.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/kubeval.tar.gz
+    dest: /usr/local/bin
+  when: kubeval.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/kubeval
+    owner: "{{user}}"
+    mode: '0700'
+  when: kubeval.changed

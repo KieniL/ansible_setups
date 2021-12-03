@@ -1,0 +1,15 @@
+
+- name: Get latest release of trivy
+  uri:
+    url: https://api.github.com/repos/aquasecurity/trivy/releases/latest
+    return_content: yes
+  register: github_release_trivy
+
+- name: get releaseversion
+  set_fact:
+    trivyversion: "{{github_release_trivy.json.tag_name}}"
+    trivy_without_v: "{{github_release_trivy.json.tag_name.split('v')}}"
+
+- name: Install trivy from apt
+  apt:
+    deb: https://github.com/aquasecurity/trivy/releases/download/{{trivyversion}}/trivy_{{trivy_without_v.1}}_Linux-64bit.deb

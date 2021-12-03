@@ -1,0 +1,2 @@
+- name: install kubescape
+  shell: curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash

@@ -1,0 +1,38 @@
+
+- name: Get latest release of dockerbench
+  uri:
+    url: https://api.github.com/repos/aquasecurity/docker-bench/releases/latest
+    return_content: yes
+  register: github_release_dockerbench
+
+- name: get releaseversion
+  set_fact:
+    dockerbenchversion: "{{github_release_dockerbench.json.tag_name}}"
+    dockerbench_without_v: "{{github_release_dockerbench.json.tag_name.split('v')}}"
+
+- name: download dockerbench from github
+  get_url:
+    url: https://github.com/aquasecurity/docker-bench/releases/download/{{dockerbenchversion}}/docker-bench_{{dockerbench_without_v.1}}_linux_amd64.tar.gz
+    dest: /usr/local/src/dockerbench.tar.gz
+  register: dockerbench
+
+- name: Extract dockerbench.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/dockerbench.tar.gz
+    dest: /usr/local/bin
+  when: dockerbench.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/docker-bench
+    owner: "{{user}}"
+    mode: '0700'
+  when: dockerbench.changed
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/cfg
+    owner: "{{user}}"
+    mode: '0700'
+    recurse: yes
+  when: dockerbench.changed

@@ -1,0 +1,30 @@
+
+# tasks for kubesec
+- name: Get latest release of kubesec
+  uri:
+    url: https://api.github.com/repos/controlplaneio/kubesec/releases/latest
+    return_content: yes
+  register: github_release_kubesec
+
+- name: get releaseversion
+  set_fact:
+    kubesecversion: "{{github_release_kubesec.json.tag_name}}"
+
+- name: download kubesec from github
+  get_url:
+    url: https://github.com/controlplaneio/kubesec/releases/download/{{kubesecversion}}/kubesec_linux_amd64.tar.gz
+    dest: /usr/local/src/kubesec.tar.gz
+  register: kubesec
+
+- name: Extract kubesec.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/kubesec.tar.gz
+    dest: /usr/local/bin
+  when: kubesec.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/kubesec
+    owner: "{{user}}"
+    mode: '0700'
+  when: kubesec.changed

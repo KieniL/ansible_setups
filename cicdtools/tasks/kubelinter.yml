@@ -1,0 +1,29 @@
+
+- name: Get latest release of kubelinter
+  uri:
+    url: https://api.github.com/repos/stackrox/kube-linter/releases/latest
+    return_content: yes
+  register: github_release_kubelinter
+
+- name: get releaseversion of kubelinter
+  set_fact:
+    kubelinterversion: "{{github_release_kubelinter.json.tag_name}}"
+
+- name: download kubelinter from github
+  get_url:
+    url: https://github.com/stackrox/kube-linter/releases/download/{{kubelinterversion}}/kube-linter-linux.tar.gz
+    dest: /usr/local/src/kubelinter.tar.gz
+  register: kubelinter
+
+- name: Extract kubelinter.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/kubelinter.tar.gz
+    dest: /usr/local/bin
+  when: kubelinter.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/kube-linter
+    owner: "{{user}}"
+    mode: '0700'
+  when: kubelinter.changed

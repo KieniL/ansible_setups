@@ -1,0 +1,70 @@
+---
+# tasks file for cicdtools
+- name: include dockerlint yml
+  include_tasks: dockerlint.yml
+
+- name: include dockerfile_lint yml
+  include_tasks: dockerfile_lint.yml
+
+- name: include dockerfilelint yml
+  include_tasks: dockerfilelint.yml
+
+- name: include hadolint yml
+  include_tasks: hadolint.yml
+
+- name: include kubeval yml
+  include_tasks: kubeval.yml
+
+- name: include kubescore yml
+  include_tasks: kubescore.yml
+
+- name: include conftest yml
+  include_tasks: conftest.yml
+
+- name: include datree yml
+  include_tasks: datree.yml
+
+- name: include kubeaudit yml
+  include_tasks: kubeaudit.yml
+
+- name: include checkov yml
+  include_tasks: checkov.yml 
+
+- name: include terrascan yml
+  include_tasks: terrascan.yml 
+
+- name: include kubesec yml
+  include_tasks: kubesec.yml 
+
+- name: include yara yml
+  include_tasks: yara.yml 
+
+- name: include yarGen yaml
+  include_tasks: yarGen.yml
+
+- name: include kubelinter yaml
+  include_tasks: kubelinter.yml
+
+- name: include kubescape yaml
+  include_tasks: kubescape.yml
+
+- name: include terraform yaml
+  include_tasks: terraform.yml
+
+- name: include tflint
+  include_tasks: tflint.yml
+
+- name: include tfsec
+  include_tasks: tfsec.yml
+
+- name: include dockerbench
+  include_tasks: dockerbench.yml
+
+- name: include trivy
+  include_tasks: trivy.yml
+
+- name: include ffuf
+  include_tasks: ffuf.yml
+
+- name: include wafw00f
+  include_tasks: wafw00f.yml

@@ -1,0 +1,5 @@
+- name: Install yara
+  apt:
+    name: yara
+    state: present
+

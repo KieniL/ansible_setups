@@ -1,0 +1,7 @@
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
+
+- name: install cert
+  shell: certbot certonly --standalone -d {{vaulturl}} --non-interactive --agree-tos -m {{mail}}

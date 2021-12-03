@@ -1,0 +1,4 @@
+- name: Install "dockerfile_lint" node.js package globally.
+  community.general.npm:
+    name: dockerfile_lint
+    global: yes

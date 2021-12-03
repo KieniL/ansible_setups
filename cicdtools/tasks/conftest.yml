@@ -1,0 +1,37 @@
+
+- name: Get latest release of conftest
+  uri:
+    url: https://api.github.com/repos/open-policy-agent/conftest/releases/latest
+    return_content: yes
+  register: github_release_conftest
+
+- name: get releaseversion
+  set_fact:
+    conftestversion: "{{github_release_conftest.json.tag_name}}"
+    conftest_without_v: "{{github_release_conftest.json.tag_name.split('v')}}"
+
+- name: download conftest from github
+  get_url:
+    url: https://github.com/open-policy-agent/conftest/releases/download/{{conftestversion}}/conftest_{{conftest_without_v.1}}_Linux_x86_64.tar.gz
+    dest: /usr/local/src/conftest.tar.gz
+  register: conftest
+
+- name: Extract conftest.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/conftest.tar.gz
+    dest: /usr/local/bin
+  when: conftest.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/conftest
+    owner: "{{user}}"
+    mode: '0700'
+  when: conftest.changed
+
+- name: Install helm conftest plugin
+  shell: helm plugin install https://github.com/instrumenta/helm-conftest
+  ignore_errors: True
+
+- name: Try to update helm conftest plugin
+  shell: helm plugin update conftest

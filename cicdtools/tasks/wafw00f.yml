@@ -1,0 +1,4 @@
+- name: Install wafw00f
+  apt:
+    name: wafw00f
+    state: present

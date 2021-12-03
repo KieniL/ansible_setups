@@ -1,0 +1,2 @@
+- name: install datree
+  shell: curl https://get.datree.io | /bin/bash

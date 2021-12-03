@@ -1,0 +1,21 @@
+- name: Import and add Hashicorp key
+  apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: Add specified hashicorp repository into sources list
+  apt_repository:
+    repo: "deb https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    state: present
+  register: add_repository_teraform
+
+- name: update package cache (debian, etc)
+  apt:
+    update_cache: yes
+  when: add_repository_teraform.changed
+
+- name: Install terraform
+  apt:
+    name: terraform
+    state: present
+

@@ -1,0 +1,31 @@
+
+# tasks for terrascan
+- name: Get latest release of terrascan
+  uri:
+    url: https://api.github.com/repos/accurics/terrascan/releases/latest
+    return_content: yes
+  register: github_release_terrascan
+
+- name: get releaseversion
+  set_fact:
+    terrascanversion: "{{github_release_terrascan.json.tag_name}}"
+    terrascan_without_v: "{{github_release_terrascan.json.tag_name.split('v')}}"
+
+- name: download terrascan from github
+  get_url:
+    url: "https://github.com/accurics/terrascan/releases/download/{{terrascanversion}}/terrascan_{{terrascan_without_v.1}}_Linux_x86_64.tar.gz"
+    dest: /usr/local/src/terrascan.tar.gz
+  register: terrascan
+
+- name: Extract terrascan.targz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/terrascan.tar.gz
+    dest: /usr/local/bin
+  when: terrascan.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/terrascan
+    owner: "{{user}}"
+    mode: '0700'
+  when: terrascan.changed

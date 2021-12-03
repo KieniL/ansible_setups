@@ -1,0 +1,12 @@
+
+# tasks for hadolint
+- name: download hadolint from github
+  get_url:
+    url: "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64"
+    dest: /usr/local/bin/hadolint
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/hadolint
+    owner: "{{user}}"
+    mode: '0700'

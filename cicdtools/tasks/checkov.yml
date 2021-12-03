@@ -1,0 +1,5 @@
+- name: install the checkov package from pip
+  pip: 
+    name: checkov
+    executable: pip3
+    extra_args: "-U"

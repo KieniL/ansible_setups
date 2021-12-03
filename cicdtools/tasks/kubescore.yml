@@ -1,0 +1,31 @@
+
+# tasks for kubescore
+- name: Get latest release of kubescore
+  uri:
+    url: https://api.github.com/repos/zegl/kube-score/releases/latest
+    return_content: yes
+  register: github_release_kubescore
+
+- name: get releaseversion
+  set_fact:
+    kubescoreversion: "{{github_release_kubescore.json.tag_name}}"
+    kubescore_without_v: "{{github_release_kubescore.json.tag_name.split('v')}}"
+
+- name: download kubescore from github
+  get_url:
+    url: "https://github.com/zegl/kube-score/releases/download/{{kubescoreversion}}/kube-score_{{kubescore_without_v.1}}_linux_amd64.tar.gz"
+    dest: /usr/local/src/kubescore.tar.gz
+  register: kubescore
+
+- name: Extract kubescore.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/kubescore.tar.gz
+    dest: /usr/local/bin
+  when: kubescore.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/kube-score
+    owner: "{{user}}"
+    mode: '0700'
+  when: kubescore.changed

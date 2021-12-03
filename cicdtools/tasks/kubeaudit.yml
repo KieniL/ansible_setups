@@ -1,0 +1,30 @@
+
+- name: Get latest release of kubeaudit
+  uri:
+    url: https://api.github.com/repos/Shopify/kubeaudit/releases/latest
+    return_content: yes
+  register: github_release_kubeaudit
+
+- name: get releaseversion
+  set_fact:
+    kubeauditversion: "{{github_release_kubeaudit.json.tag_name}}"
+    kubeaudit_without_v: "{{github_release_kubeaudit.json.tag_name.split('v')}}"
+
+- name: download kubeaudit from github
+  get_url:
+    url: https://github.com/Shopify/kubeaudit/releases/download/{{kubeauditversion}}/kubeaudit_{{kubeaudit_without_v.1}}_linux_amd64.tar.gz
+    dest: /usr/local/src/kubeaudit.tar.gz
+  register: kubeaudit
+
+- name: Extract kubeaudit.tar.gz into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/kubeaudit.tar.gz
+    dest: /usr/local/bin
+  when: kubeaudit.changed
+    
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/kubeaudit
+    owner: "{{user}}"
+    mode: '0700'
+  when: kubeaudit.changed

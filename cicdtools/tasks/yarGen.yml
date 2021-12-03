@@ -1,0 +1,69 @@
+
+- name: Get latest release of yarGen
+  uri:
+    url: https://api.github.com/repos/Neo23x0/yarGen/releases/latest
+    return_content: yes
+  register: github_release_yarGen
+
+- name: get releaseversion
+  set_fact:
+    yarGenversion: "{{github_release_yarGen.json.tag_name}}"
+
+- name: download yarGen from github
+  get_url:
+    url: https://github.com/Neo23x0/yarGen/archive/refs/tags/{{yarGenversion}}.zip
+    dest: /usr/local/src/yarGen.zip
+  register: yarGen
+
+- name: Extract yarGen.zip into /usr/local/bin
+  unarchive:
+    src: /usr/local/src/yarGen.zip
+    dest: /usr/local/bin
+  when: yarGen.changed
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /usr/local/bin/yarGen-{{yarGenversion}}
+    owner: "{{user}}"
+    mode: '0700'
+    recurse: yes
+  when: yarGen.changed
+
+- name: Install specified python requirements
+  pip:
+    requirements: /usr/local/bin/yarGen-{{yarGenversion}}/requirements.txt
+    executable: pip3
+    extra_args: "-U"
+
+- name: Test for line of yarGen in .bashrc
+  shell: grep -c "^yarGen" /home/{{user}}/.bashrc || true
+  register: test_grep_yarGen
+  when: yarGen.changed
+
+- name: Adding the path in the bashrc files
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'alias yarGen="python3 /usr/local/bin/yarGen-{{yarGenversion}}/yarGen.py"'
+    state: present
+  when:
+  - yarGen.changed
+  - test_grep_yarGen.stdout == "0"
+
+- name: Updating the path in the bashrc files
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    line: 'alias yarGen="python3 /usr/local/bin/yarGen-{{yarGenversion}}/yarGen.py"'
+    backrefs: yes
+    regexp: '^alias yarGen'
+    state: present
+  when:
+  - yarGen.changed
+  - test_grep_yarGen.stdout != "0"
+  
+
+- name: Source the bashrc file
+  shell: "source /home/{{user}}/.bashrc"
+  args:
+    executable: /bin/bash
+  when: yarGen.changed
+    

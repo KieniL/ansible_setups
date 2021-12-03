@@ -18,6 +18,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
+      - name: Debug
+        run: |
+          echo "${{ github.repository }}"
       - name: molecule
         uses: gofrolist/molecule-action@v2
         with:

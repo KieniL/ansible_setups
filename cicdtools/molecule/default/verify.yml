@@ -5,6 +5,77 @@
   hosts: all
   gather_facts: false
   tasks:
-  - name: Example assertion
-    assert:
-      that: true
+  - name: get checkov version to check if installed
+    shell: checkov --version
+
+  - name: get conftest version to check if installed
+    shell: checkov --version
+
+  - name: check if helm conftest is installed by running update
+    shell: helm plugin update conftest
+
+  - name: get datree version to check if installed
+    shell: datree version
+
+  - name: get dockerbench help to check if installed
+    shell: docker-bench --help
+
+  - name: get dockerfile_lint help to check if installed
+    shell: dockerfile_lint --help
+
+  - name: get dockerfilelint version to check if installed
+    shell: dockerfilelint --version
+
+  - name: get dockerlint help to check if installed
+    shell: dockerlint --help
+
+  - name: get ffuf version to check if installed
+    shell: ffuf -V
+
+  - name: get hadolint version to check if installed
+    shell: hadolint --version
+
+  - name: get kubeaudit version to check if installed
+    shell: kubeaudit version
+
+  - name: get kubelinter version to check if installed
+    shell: kube-linter version
+
+  - name: get kubescape version to check if installed
+    shell: kubescape --version
+
+  - name: get kubescore version to check if installed
+    shell: kube-score version
+
+  - name: get kubesec version to check if installed
+    shell: kubesec version
+
+  - name: get kubeval version to check if installed
+    shell: kubeval --version
+
+  - name: get terraform version to check if installed
+    shell: terraform --version
+
+  - name: get terrascan version to check if installed
+    shell: terrascan version
+
+  - name: get tflint version to check if installed
+    shell: tflint --version
+
+  - name: get tfsec version to check if installed
+    shell: tfsec --version
+
+  - name: get trivy version to check if installed
+    shell: trivy --version
+
+  - name: get wafw00f version to check if installed
+    shell: wafw00f --version
+
+  - name: get yara version to check if installed
+    shell: yara --version
+
+
+
+
+
+

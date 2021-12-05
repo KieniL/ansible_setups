@@ -4,8 +4,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: suid-sgid-instance
-    image: ${MOLECULE_DISTRO:-docker.io/pycontribs/centos:8}
+  - name: cicdtools-instance
+    image: ${MOLECULE_DISTRO:-geerlingguy/docker-ubuntu2004-ansible}
     pre_build_image: true
 test_sequence:
   - lint
@@ -18,6 +18,11 @@ test_sequence:
   - destroy
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      all:
+        user: root
+        bashrc_dir: "/root"
 lint: |
   yamllint .
   ansible-lint

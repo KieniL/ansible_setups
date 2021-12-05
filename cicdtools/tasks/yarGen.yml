@@ -37,13 +37,13 @@
     extra_args: "-U"
 
 - name: Test for line of yarGen in .bashrc
-  shell: grep -c "^yarGen" /home/{{user}}/.bashrc || true
+  shell: grep -c "^yarGen" {{bashrc_dir}}/.bashrc || true
   register: test_grep_yarGen
   when: yarGen.changed
 
 - name: Adding the path in the bashrc files
   lineinfile:
-    dest: "/home/{{user}}/.bashrc"
+    dest: "{{bashrc_dir}}/.bashrc"
     line: 'alias yarGen="python3 /usr/local/bin/yarGen-{{yarGenversion}}/yarGen.py"'
     state: present
   when:
@@ -52,7 +52,7 @@
 
 - name: Updating the path in the bashrc files
   lineinfile:
-    dest: "/home/{{user}}/.bashrc"
+    dest: "{{bashrc_dir}}/.bashrc"
     line: 'alias yarGen="python3 /usr/local/bin/yarGen-{{yarGenversion}}/yarGen.py"'
     backrefs: yes
     regexp: '^alias yarGen'
@@ -63,7 +63,7 @@
   
 
 - name: Source the bashrc file
-  shell: "source /home/{{user}}/.bashrc"
+  shell: "source {{bashrc_dir}}/.bashrc"
   args:
     executable: /bin/bash
   when: yarGen.changed

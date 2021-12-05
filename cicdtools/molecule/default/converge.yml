@@ -2,6 +2,28 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: Add helm signing key
+      ansible.builtin.apt_key:
+        url: https://baltocdn.com/helm/signing.asc
+        state: present
+
+    - name: Add helm repository into sources list
+      ansible.builtin.apt_repository:
+        repo: deb https://baltocdn.com/helm/stable/debian/ all main
+        state: present
+
+    - name: Install prerequisites (npm, nodejs, helm, git, curl, unzip)
+      apt:
+        pkg:
+          - nodejs
+          - npm
+          - helm
+          - git
+          - curl
+          - unzip
+        state: latest
+        update_cache: true
+
     - name: "Include cicdtools"
       include_role:
         name: "cicdtools"

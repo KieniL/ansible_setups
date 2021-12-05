@@ -33,3 +33,9 @@ All Steps exluding the installation (apt instead of downloading of tar.gz) are t
 
 - [x] consul
 - [x] vault
+
+### local run
+
+<code>
+ansible-playbook -i inventory local.yml -K
+</code>

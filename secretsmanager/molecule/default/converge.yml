@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include gpg"
+      include_role:
+        name: "dockpack.gpg_agent"
+
+    - name: "Include secretsmanager"
+      include_role:
+        name: "secretsmanager"

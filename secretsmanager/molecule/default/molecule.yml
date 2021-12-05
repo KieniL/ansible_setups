@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+  role-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: secretsmanager-instance
+    image: geerlingguy/docker-ubuntu2004-ansible
+    privileged: True
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/lib/systemd/systemd"
+test_sequence:
+  - lint
+  - destroy
+  - dependency
+  - syntax
+  - create
+  - converge
+  - verify
+  - destroy
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        vaulturl: vault.local.at
+        mail: test@test.at
+lint: |
+  yamllint .
+  ansible-lint
+  flake8
+verifier:
+  name: ansible

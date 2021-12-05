@@ -6,6 +6,7 @@ suid_files_check:
   - /usr/bin/newgrp
   - /usr/libexec/dbus-1/dbus-daemon-launch-helper
   - /usr/bin/su
+  - /usr/bin/mount
   - /bin/su
   - /usr/bin/chage
   - /usr/bin/sudo

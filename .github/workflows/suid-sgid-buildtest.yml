@@ -1,4 +1,4 @@
-name: test ansible-role
+name: test suid-sgid-role
 
 on:
   push:

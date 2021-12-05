@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include cicdtools"
+      include_role:
+        name: "cicdtools"

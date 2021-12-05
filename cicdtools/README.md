@@ -2,7 +2,13 @@ cicdtools
 =========
 
 The structure is generated with:
+
+
+<code>
 ansible-galaxy init cicdtools
+molecule init scenario --role-name cicdtools default -d docker
+rm -rf ./meta/
+</code>
 ------------
 
 ### Installed Tools

@@ -8,11 +8,10 @@
 - name: get releaseversion
   set_fact:
     kubeauditversion: "{{github_release_kubeaudit.json.tag_name}}"
-    kubeaudit_without_v: "{{github_release_kubeaudit.json.tag_name.split('v')}}"
 
 - name: download kubeaudit from github
   get_url:
-    url: https://github.com/Shopify/kubeaudit/releases/download/{{kubeauditversion}}/kubeaudit_{{kubeaudit_without_v.1}}_linux_amd64.tar.gz
+    url: https://github.com/Shopify/kubeaudit/releases/download/{{kubeauditversion}}/kubeaudit_{{kubeauditversion}}_linux_amd64.tar.gz
     dest: /usr/local/src/kubeaudit.tar.gz
   register: kubeaudit
 

@@ -46,10 +46,10 @@ Binary installations for cicd and security testing tools which are mostly used h
 - [x] Conftest
 - [ ] Conftest helm
 - [x] Datree
-- [ ] Kubeaudit
+- [x] Kubeaudit
 - [x] Checkov
 - [x] Terrascan
-- [ ] kubesec
+- [x] kubesec
 - [ ] yara
 - [ ] yarGen
 - [x] kube-linter
@@ -61,3 +61,10 @@ Binary installations for cicd and security testing tools which are mostly used h
 - [x] trivy
 - [ ] ffuf
 - [ ] wafw00f
+
+
+### local run
+
+<code>
+ansible-playbook -i inventory local.yml -K
+</code>

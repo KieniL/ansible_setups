@@ -1,0 +1,35 @@
+# tasks to complete before running roles
+- hosts: all
+  tags: always
+  gather_facts: no
+  become: true
+  pre_tasks:
+    - name: pre-run | update package cache (debian, etc)
+      tags: always
+      apt:
+        update_cache: yes
+      changed_when: False
+    - name: pre-run | upgrade package cache (debian, etc)
+      tags: always
+      apt:
+        update_cache: yes
+        upgrade: yes
+      changed_when: False
+    - name: pre-run | distupgrade package cache (debian, etc)
+      tags: always
+      apt:
+        update_cache: yes
+        upgrade: dist
+      changed_when: False
+    - name: pre-run | snap refresh cache (debian, etc)
+      command: snap refresh
+    - name: pre-run | Clean unwanted olderstuff (debian, etc) 
+      apt:
+        autoremove: yes
+        purge: yes
+
+- hosts: cicdworker
+  tags: cicdtools
+  become: true
+  roles:
+    - {role: ./}

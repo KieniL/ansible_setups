@@ -10,6 +10,7 @@
   unarchive:
     src: /usr/local/src/kubeval.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: kubeval.changed
     
 - name: Change file ownership, group and permissions

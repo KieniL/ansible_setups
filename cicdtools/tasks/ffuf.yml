@@ -20,6 +20,7 @@
   unarchive:
     src: /usr/local/src/ffuf.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: ffuf.changed
     
 - name: Change file ownership, group and permissions

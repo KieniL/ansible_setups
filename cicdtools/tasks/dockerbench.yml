@@ -20,6 +20,7 @@
   unarchive:
     src: /usr/local/src/dockerbench.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: dockerbench.changed
     
 - name: Change file ownership, group and permissions

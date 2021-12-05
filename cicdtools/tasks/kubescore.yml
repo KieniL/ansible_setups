@@ -21,6 +21,7 @@
   unarchive:
     src: /usr/local/src/kubescore.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: kubescore.changed
     
 - name: Change file ownership, group and permissions

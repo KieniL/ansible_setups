@@ -21,6 +21,7 @@
   unarchive:
     src: /usr/local/src/terrascan.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: terrascan.changed
     
 - name: Change file ownership, group and permissions

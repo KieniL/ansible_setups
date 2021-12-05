@@ -20,6 +20,7 @@
   unarchive:
     src: /usr/local/src/kubesec.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: kubesec.changed
     
 - name: Change file ownership, group and permissions

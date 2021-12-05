@@ -19,6 +19,7 @@
   unarchive:
     src: /usr/local/src/kubelinter.tar.gz
     dest: /usr/local/bin
+    remote_src: true
   when: kubelinter.changed
     
 - name: Change file ownership, group and permissions

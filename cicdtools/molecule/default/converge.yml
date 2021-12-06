@@ -2,6 +2,10 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: "Include gpg"
+      include_role:
+        name: "dockpack.gpg_agent"
+        
     - name: Add helm signing key
       ansible.builtin.apt_key:
         url: https://baltocdn.com/helm/signing.asc

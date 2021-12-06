@@ -11,7 +11,7 @@ Following roles are there
 
 ToDo:
 
-- [ ] Add molecule testing to cicdtools
+- [x] Add molecule testing to cicdtools --> Docker based
 - [ ] Add molecule testing to secretsmanager (needs to be done on real linux systems since systemd does not work in wsl)
 - [x] Add molecule testing to suid-sgid-checker --> Docker based
 - [ ] Add molecule testing to ansible-pull

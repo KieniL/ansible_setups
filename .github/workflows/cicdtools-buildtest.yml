@@ -32,13 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         distros:
-          - docker.io/pycontribs/centos:8
-          - docker.io/pycontribs/alpine
-          - docker.io/pycontribs/debian
-          - docker.io/pycontribs/fedora
-          - docker.io/pycontribs/opensuse
-          - docker.io/pycontribs/ubuntu
-          - geerlingguy/docker-ubuntu2004-ansible}
+          - geerlingguy/docker-ubuntu2004-ansible
 
     steps:
       - uses: actions/checkout@v2

@@ -12,3 +12,5 @@ keyed_groups:
     key: 'docker_config.Image'
   - prefix: state
     key: 'docker_state.Status'
+  - prefix: labels
+    key: 'docker_config.Labels'

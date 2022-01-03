@@ -8,6 +8,7 @@ Following roles are there
 * [suid-sgid-checker](./suid-sgid-checker/README.md)
 * [ansible-pull](./ansible-pull/README.md)
 * [kubernetes-install](./kubernetes-install/README.md)
+* [dynamic-inventory](./dynamic-inventory/README.md)
 
 ToDo:
 
